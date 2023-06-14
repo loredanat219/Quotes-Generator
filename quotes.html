@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Happy Quotes Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .quotes-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #quote {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #replies {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #replies li {
+            margin-bottom: 10px;
+        }
+
+        #submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        #replies li.selected {
+            background-color: #e0e
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quotes-container">
+        <h2>Happy Quotes Generator</h2>
+        <div id="quote"></div>
+        <ul id="replies"></ul>
+        <button id="submit-btn">Submit</button>
+    </div>
+    <p id="demo"></p>
+    <script>
+        var quotesSupply = [
+            {
+                quote: "Never give up",
+                replies: ["I like it", "I don't like it"],
+            },
+            {
+                quote: "Know when to give up",
+                replies: ["I love it", "I hate it"],
+            },
+            {
+                quote: "Carpe Diem",
+                replies: ["Always", "what about the bills?"]
+            }
+        ];
+
+        var currentQuote = 0;
+        var isAnswerSelected = false;
+
+        function loadQuotes() {
+            var quoteElement = document.getElementById("quote");
+            var repliesElement = document.getElementById("replies");
+            var submitButton = document.getElementById("submit-btn");
+
+            quoteElement.textContent = "";
+            repliesElement.innerHTML = "";
+
+            var currentQuoteSupply = quotesSupply[currentQuote];
+            quoteElement.textContent = currentQuoteSupply.quote;
+
+            currentQuoteSupply.replies.forEach(function (reply) {
+                var li = document.createElement("li");
+                li.textContent = reply;
+                li.addEventListener("click", selectReply);
+                repliesElement.appendChild(li);
+            });
+
+            submitButton.disabled = true;
+            isAnswerSelected = false;
+        }
+
+        function selectReply(event) {
+            if (!isAnswerSelected) {
+                var selectedReply = event.target;
+                var replies = document.getElementById("replies").getElementsByTagName("li");
+                for (var i = 0; i < replies.length; i++) {
+                    replies[i].classList.remove("selected");
+                }
+                selectedReply.classList.add("selected");
+
+                var submitButton = document.getElementById("submit-btn");
+                submitButton.disabled = false;
+                isAnswerSelected = true;
+            }
+        }
+
+        function submitReply() {
+            if (isAnswerSelected) {
+                currentQuote++;
+
+                if (currentQuote === quotesSupply.length) {
+                    endQuiz();
+                } else {
+                    loadQuotes();
+                }
+
+                isAnswerSelected = false;
+            }
+        }
+
+        function endQuiz() {
+            var quoteContainer = document.querySelector(".quotes-container");
+            var quoteElement = document.getElementById("quote");
+            var repliesElement = document.getElementById("replies");
+            var submitButton = document.getElementById("submit-btn");
+
+            quoteElement.style.display = "none";
+            repliesElement.style.display = "none";
+            submitButton.style.display = "none";
+
+            var messageElement = document.createElement("p");
+            messageElement.textContent = "Thank you for your feedback!";
+            quoteContainer.appendChild(messageElement);
+        }
+
+        document.getElementById("submit-btn").addEventListener("click", submitReply);
+
+        loadQuotes();
+    </script>
+</body>
+
+</html>
